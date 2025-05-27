@@ -76,7 +76,7 @@ class OnBoardingScreen extends StatelessWidget {
                       ),
                       onPressed: () {
                         // Navigasi ke halaman selanjutnya
-                        context.go('/home');
+                        context.go('/mainpage');
                       },
                       child: const Text(
                         'Mulai Sekarang',
