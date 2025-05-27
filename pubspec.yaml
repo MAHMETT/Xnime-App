@@ -26,24 +26,27 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - lib/assets/fonts/poppins/
-    - lib/assets/logos/Xyutori.svg
+    - .env
+    - assets/images/
+    - assets/fonts/poppins/
+    - assets/logos/Xyutori.svg
+    - assets/logos/Xyutori .png
   fonts:
     - family: Poppins
       fonts:
-        - asset: lib/assets/fonts/poppins/Poppins-Regular.ttf
+        - asset: assets/fonts/poppins/Poppins-Regular.ttf
           weight: 400
-        - asset: lib/assets/fonts/poppins/Poppins-Medium.ttf
+        - asset: assets/fonts/poppins/Poppins-Medium.ttf
           weight: 500
-        - asset: lib/assets/fonts/poppins/Poppins-SemiBold.ttf
+        - asset: assets/fonts/poppins/Poppins-SemiBold.ttf
           weight: 600
-        - asset: lib/assets/fonts/poppins/Poppins-Bold.ttf
+        - asset: assets/fonts/poppins/Poppins-Bold.ttf
           weight: 700
-        - asset: lib/assets/fonts/poppins/Poppins-MediumItalic.ttf
+        - asset: assets/fonts/poppins/Poppins-MediumItalic.ttf
           style: italic
 
 flutter_launcher_icons:
-  image_path: "lib/assets/logos/Xyutori.png"
+  image_path: "assets/logos/Xyutori.png"
   android: true
   ios: true
   linux: true

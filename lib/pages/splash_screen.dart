@@ -13,7 +13,7 @@ class SplashScreen extends StatefulWidget {
   const SplashScreen({
     super.key,
     this.duration = const Duration(seconds: 2),
-    this.logo = 'lib/assets/logos/Xyutori.svg',
+    this.logo = 'assets/logos/Xyutori.svg',
     required this.onInitComplete,
   });
 

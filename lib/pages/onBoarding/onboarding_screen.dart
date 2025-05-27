@@ -1,79 +1,94 @@
 import 'package:flutter/material.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:go_router/go_router.dart';
 import 'package:xnime_app/core/theme/app_colors.dart';
-import 'package:xnime_app/shared/widgets/custom_text_button_default.dart';
+import 'package:xnime_app/core/theme/app_text_styles.dart';
 
-class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key});
-
-  @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
-}
-
-class _OnboardingScreenState extends State<OnboardingScreen> {
-  final controller = PageController();
-
-  @override
-  void dispose() {
-    super.dispose();
-    controller.dispose();
-  }
+class OnBoardingScreen extends StatelessWidget {
+  const OnBoardingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.only(bottom: 80),
-        child: PageView(
-          controller: controller,
-          children: [
-            // Page 1
-            Container(
-              color: Colors.red,
-              child: const Center(child: Text('Page1')),
+      body: Stack(
+        children: [
+          // Background image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/onboarding_bg.jpg', // Ganti sesuai path kamu
+              fit: BoxFit.cover,
             ),
-            // Page 2
-            Container(
-              color: Colors.yellow,
-              child: const Center(child: Text('Page2')),
-            ),
-            // Page 3
-            Container(
-              color: Colors.green,
-              child: const Center(child: Text('Page3')),
-            ),
-            // Page 4
-            Container(
-              color: Colors.blue,
-              child: const Center(child: Text('Page4')),
-            ),
-          ],
-        ),
-      ),
-      bottomSheet: Container(
-        padding: EdgeInsets.symmetric(horizontal: 40),
-        height: 60,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // TextButton for Skip
-            CustomTextButton(text: 'Skip', onPressed: () {}),
-            // For Smooth Page Indicator
-            Center(
-              child: SmoothPageIndicator(
-                controller: controller,
-                count: 4,
-                effect: WormEffect(
-                  spacing: 15,
-                  dotColor: AppColors.semiDark,
-                  activeDotColor: AppColors.primary,
+          ),
+
+          // Gradient overlay dari bawah ke atas
+          Positioned.fill(
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [Colors.black87, Colors.transparent],
                 ),
               ),
             ),
-            // TextButton for Next
-            CustomTextButton(text: 'Next', onPressed: () {}),
-          ],
-        ),
+          ),
+
+          // Konten utama
+          Positioned.fill(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Spacer(),
+
+                  // Judul
+                  Text(
+                    'Selamat Datang',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Deskripsi
+                  Text(
+                    'Temukan pengalaman baru menonton anime favoritmu dengan cepat dan mudah.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyLarge?.copyWith(color: Colors.white70),
+                  ),
+                  const SizedBox(height: 32),
+
+                  // Tombol lanjut
+                  SizedBox(
+                    width: double.infinity,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: () {
+                        // Navigasi ke halaman selanjutnya
+                        context.go('/home');
+                      },
+                      child: const Text(
+                        'Mulai Sekarang',
+                        style: AppTextStyles.normalSemiBold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
