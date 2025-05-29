@@ -35,7 +35,7 @@ class OnBoardingScreen extends StatelessWidget {
           // Konten utama
           Positioned.fill(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -46,10 +46,7 @@ class OnBoardingScreen extends StatelessWidget {
                   Text(
                     'Selamat Datang',
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: AppTextStyles.xxxlBold,
                   ),
                   const SizedBox(height: 16),
 
@@ -57,9 +54,7 @@ class OnBoardingScreen extends StatelessWidget {
                   Text(
                     'Temukan pengalaman baru menonton anime favoritmu dengan cepat dan mudah.',
                     textAlign: TextAlign.center,
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodyLarge?.copyWith(color: Colors.white70),
+                    style: AppTextStyles.smSemiBold,
                   ),
                   const SizedBox(height: 32),
 

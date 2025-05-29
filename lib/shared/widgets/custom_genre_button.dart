@@ -2,33 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:xnime_app/core/theme/app_colors.dart';
 import 'package:xnime_app/core/theme/app_text_styles.dart';
 
-class CustomTextButton extends StatefulWidget {
+class CustomGenreButton extends StatefulWidget {
   final String text;
-  final VoidCallback onPressed;
-  final double? width;
+  // final VoidCallback onPressed;
+  // final double? width;
   final EdgeInsetsGeometry padding;
   final Color backgroundColor;
   final Color textColor;
   final double borderRadius;
   final TextStyle textStyle;
 
-  const CustomTextButton({
+  const CustomGenreButton({
     super.key,
     required this.text,
-    required this.onPressed,
-    this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    // required this.onPressed,
+    this.padding = const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
     this.backgroundColor = AppColors.semiDark,
     this.textColor = AppColors.light,
-    this.borderRadius = 8.0,
-    this.textStyle = AppTextStyles.normalSemiBold,
-    this.width,
+    this.borderRadius = 10,
+    this.textStyle = AppTextStyles.xsSemiBold,
+    // this.width,
   });
 
   @override
-  State<CustomTextButton> createState() => _CustomTextButtonState();
+  State<CustomGenreButton> createState() => _CustomGenreButtonState();
 }
 
-class _CustomTextButtonState extends State<CustomTextButton> {
+class _CustomGenreButtonState extends State<CustomGenreButton> {
   bool _isHovered = false;
 
   int _opacityToAlpha(double opacity) =>
@@ -46,10 +46,10 @@ class _CustomTextButtonState extends State<CustomTextButton> {
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: GestureDetector(
-        onTap: widget.onPressed,
+        // onTap: widget.onPressed,
         child: AnimatedContainer(
           alignment: Alignment.center,
-          width: widget.width,
+          // width: widget.width,
           duration: const Duration(milliseconds: 200),
           padding: widget.padding,
           decoration: BoxDecoration(

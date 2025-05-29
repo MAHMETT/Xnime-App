@@ -5,37 +5,37 @@ class AppTextStyles {
   // Regular
   static const xxxl = TextStyle(
     fontSize: 30,
-    fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.w400,
     color: AppColors.light,
   );
   static const xxl = TextStyle(
     fontSize: 24,
-    fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.w400,
     color: AppColors.light,
   );
   static const xl = TextStyle(
     fontSize: 20,
-    fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.w400,
     color: AppColors.light,
   );
   static const lg = TextStyle(
     fontSize: 28,
-    fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.w400,
     color: AppColors.light,
   );
   static const normal = TextStyle(
     fontSize: 16,
-    fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.w400,
     color: AppColors.light,
   );
   static const sm = TextStyle(
     fontSize: 14,
-    fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.w400,
     color: AppColors.light,
   );
   static const xs = TextStyle(
     fontSize: 12,
-    fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.w400,
     color: AppColors.light,
   );
 
@@ -79,37 +79,37 @@ class AppTextStyles {
   // Bold
   static const xxxlBold = TextStyle(
     fontSize: 30,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.bold,
     color: AppColors.light,
   );
   static const xxlBold = TextStyle(
     fontSize: 24,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.bold,
     color: AppColors.light,
   );
   static const xlBold = TextStyle(
     fontSize: 20,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.bold,
     color: AppColors.light,
   );
   static const lgBold = TextStyle(
     fontSize: 28,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.bold,
     color: AppColors.light,
   );
   static const normalBold = TextStyle(
     fontSize: 16,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.bold,
     color: AppColors.light,
   );
   static const smBold = TextStyle(
     fontSize: 14,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.bold,
     color: AppColors.light,
   );
   static const xsBold = TextStyle(
     fontSize: 12,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.bold,
     color: AppColors.light,
   );
 }
