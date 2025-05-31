@@ -29,9 +29,11 @@ class AnimeItems {
     href: json['href'] ?? '',
     score: json['score'] ?? '',
     genreList:
-        (json['genreList'] as List)
-            .map((title) => GenreItemsModel.fromJson(title))
-            .toList(),
+        (json['genreList'] is List)
+            ? (json['genreList'] as List)
+                .map((item) => GenreItemsModel.fromJson(item))
+                .toList()
+            : [],
   );
 
   Map<String, dynamic> toJson() => {

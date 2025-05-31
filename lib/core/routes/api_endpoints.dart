@@ -3,7 +3,7 @@ class ApiEndpoints {
   static const onBoarding = '/onboarding';
   static const home = '/home';
   static const search = '/search';
-  static const animeList = '/anime';
+  static const animeList = '/ongoing';
   static const genres = '/genres';
   static const schedule = '/schedule';
   static const completed = '/completed';

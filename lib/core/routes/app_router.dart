@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:xnime_app/core/routes/api_endpoints.dart';
 import 'package:xnime_app/main.dart';
-import 'package:xnime_app/pages/anime_list_page.dart';
+import 'package:xnime_app/pages/explore_page.dart';
 import 'package:xnime_app/pages/home_page.dart';
 import 'package:xnime_app/pages/onBoarding/onboarding_screen.dart';
 import 'package:xnime_app/pages/search_page.dart';
@@ -38,7 +38,7 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: ApiEndpoints.animeList,
       builder: (BuildContext context, GoRouterState state) {
-        return const AnimeListPage();
+        return const ExplorePage();
       },
     ),
     GoRoute(

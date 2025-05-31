@@ -41,6 +41,16 @@ class ApiService {
     }
   }
 
+  Future<List<dynamic>> fetchHome() async {
+    try {
+      final response = await _dio.get('/ongoing');
+      // print(response.data['data']['animeList']);
+      return response.data['data']['animeList'];
+    } on DioException catch (e) {
+      throw Exception(_handleError(e));
+    }
+  }
+
   String _handleError(DioException error) {
     if (error.type == DioExceptionType.connectionTimeout) {
       return "Connection timeout";
