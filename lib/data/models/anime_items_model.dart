@@ -9,6 +9,7 @@ class AnimeItems {
   final String animeId;
   final String href;
   final String? score;
+  final String? status;
   final List<GenreItemsModel> genreList;
 
   const AnimeItems({
@@ -19,6 +20,7 @@ class AnimeItems {
     required this.href,
     required this.score,
     required this.genreList,
+    this.status,
   });
 
   factory AnimeItems.fromJson(Map<String, dynamic> json) => AnimeItems(
@@ -28,6 +30,7 @@ class AnimeItems {
     episodes: json['episodes'] ?? 0,
     href: json['href'] ?? '',
     score: json['score'] ?? '',
+    status: json['status'] ?? '',
     genreList:
         (json['genreList'] is List)
             ? (json['genreList'] as List)
@@ -42,7 +45,7 @@ class AnimeItems {
     "animeId": animeId,
     "episodes": episodes,
     "href": href,
-    "score": score,
+    "status": status,
     "genreList": genreList.map((a) => a.toJson()).toList(),
   };
 }

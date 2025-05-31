@@ -101,6 +101,8 @@ class _SearchPageState extends State<SearchPage> {
                                     return AnimeCard(
                                       imagePath: anime.poster,
                                       title: anime.title,
+                                      rating: anime.score,
+                                      status: anime.status,
                                     );
                                   }).toList(),
                             ),
