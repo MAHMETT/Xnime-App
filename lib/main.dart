@@ -2,8 +2,10 @@ import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:xnime_app/core/routes/app_router.dart';
 import 'package:xnime_app/core/theme/app_colors.dart';
+import 'package:xnime_app/core/theme/app_text_styles.dart';
 import 'package:xnime_app/core/theme/app_theme.dart';
 import 'package:xnime_app/pages/explore_page.dart';
 import 'package:xnime_app/pages/home_page.dart';
@@ -88,6 +90,15 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset('assets/logos/Xyutori.svg', width: 30),
+            Text('Xnime', style: AppTextStyles.xlBold),
+          ],
+        ),
+      ),
       body: IndexedStack(
         index: currentIndex,
         children: List.generate(_pages.length, (i) => screens(i)),

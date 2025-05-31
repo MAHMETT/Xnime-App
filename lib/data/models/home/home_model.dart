@@ -1,18 +1,21 @@
-import 'package:xnime_app/data/models/home/completed_section.dart';
-import 'package:xnime_app/data/models/home/ongoing_section.dart';
+import 'package:xnime_app/data/models/anime_items_model.dart';
 
 class HomeModel {
-  final OngoingSection ongoing;
-  final CompletedSection completed;
+  final List<AnimeItems> ongoing;
+  final List<AnimeItems> completed;
 
   const HomeModel({required this.ongoing, required this.completed});
 
-  factory HomeModel.fromJson(Map<String, dynamic> json) => HomeModel(
-    ongoing: OngoingSection.fromJson(json['data']['ongoing']),
-    completed: CompletedSection.fromJson(json['data']['completed']),
-  );
-
-  Map<String, dynamic> toJson() => {
-    'data': {"ongoing": ongoing.toJson(), "completed": completed.toJson()},
-  };
+  factory HomeModel.fromJson(Map<String, dynamic> json) {
+    return HomeModel(
+      ongoing:
+          (json['data']['ongoing']['animeList'] as List)
+              .map((e) => AnimeItems.fromJson(e))
+              .toList(),
+      completed:
+          (json['data']['completed']['animeList'] as List)
+              .map((e) => AnimeItems.fromJson(e))
+              .toList(),
+    );
+  }
 }

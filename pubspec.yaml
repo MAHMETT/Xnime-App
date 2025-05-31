@@ -31,7 +31,7 @@ flutter:
     - assets/images/
     - assets/fonts/poppins/
     - assets/logos/Xyutori.svg
-    - assets/logos/Xyutori .png
+    - assets/logos/Xyutori.png
   fonts:
     - family: Poppins
       fonts:

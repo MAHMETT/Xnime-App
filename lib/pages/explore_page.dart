@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xnime_app/data/models/anime_items_model.dart';
 import 'package:xnime_app/data/service/api_service.dart';
 import 'package:xnime_app/shared/widgets/anime_card.dart';
@@ -27,7 +28,7 @@ class _ExplorePageState extends State<ExplorePage> {
   }
 
   Future<List<AnimeItems>> _loadAnimeItems() async {
-    final rawItems = await _apiService.fetchHome();
+    final rawItems = await _apiService.fetchOngoing();
     return rawItems.map((json) => AnimeItems.fromJson(json)).toList();
   }
 
@@ -42,7 +43,7 @@ class _ExplorePageState extends State<ExplorePage> {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return Center(child: Text("Periksa Koneksi Internetmu"));
+            return Center(child: SvgPicture.asset('assets/images/404.svg'));
           }
 
           final animeList = snapshot.data!;
@@ -59,6 +60,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       return AnimeCard(
                         imagePath: anime.poster,
                         title: anime.title,
+                        episodes: anime.episodes.toString(),
                       );
                     }).toList(),
               ),

@@ -2,6 +2,8 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:xnime_app/data/models/anime_items_model.dart';
+import 'package:xnime_app/data/models/home/home_model.dart';
 
 class ApiService {
   late final Dio _dio;
@@ -41,14 +43,51 @@ class ApiService {
     }
   }
 
-  Future<List<dynamic>> fetchHome() async {
+  Future<List<dynamic>> fetchOngoing() async {
     try {
       final response = await _dio.get('/ongoing');
-      // print(response.data['data']['animeList']);
       return response.data['data']['animeList'];
     } on DioException catch (e) {
       throw Exception(_handleError(e));
     }
+  }
+
+  Future<HomeModel> fetchHome() async {
+    try {
+      final response = await _dio.get('/home');
+      return HomeModel.fromJson(response.data);
+    } on DioException catch (e) {
+      throw Exception(_handleError(e));
+    }
+  }
+
+  // Future<List<AnimeItems>> fetchSearch(String query) async {
+  //   try {
+  //     final response = await _dio.get('/search?q=$query');
+  //     if (response.statusCode == 200) {
+  //       final List list = response.data['data']; // sesuaikan dengan struktur
+  //       return list.map((item) => AnimeItems.fromJson(item)).toList();
+  //     } else {
+  //       throw Exception('Anime tidak ditemukan');
+  //     }
+  //   } on DioException catch (e) {
+  //     throw Exception(_handleError(e));
+  //   }
+  // }
+
+  Future<Map<String, dynamic>> fetchSearch(String query) async {
+    try {
+      final response = await _dio.get('/search', queryParameters: {'q': query});
+      return response.data;
+    } catch (e) {
+      throw Exception('Failed to fetch search results: $e');
+    }
+  }
+
+  Future<List<AnimeItems>> fetchSearchAnime(String query) async {
+    final data = await fetchSearch(query);
+    final List<dynamic> rawList = data['data']['animeList'];
+    return rawList.map((json) => AnimeItems.fromJson(json)).toList();
   }
 
   String _handleError(DioException error) {

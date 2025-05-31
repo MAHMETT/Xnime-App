@@ -5,6 +5,7 @@ import 'package:xnime_app/main.dart';
 import 'package:xnime_app/pages/explore_page.dart';
 import 'package:xnime_app/pages/home_page.dart';
 import 'package:xnime_app/pages/onBoarding/onboarding_screen.dart';
+import 'package:xnime_app/pages/ongoing_page.dart';
 import 'package:xnime_app/pages/search_page.dart';
 import 'package:xnime_app/pages/splash_screen.dart';
 
@@ -36,9 +37,15 @@ final GoRouter router = GoRouter(
       },
     ),
     GoRoute(
-      path: ApiEndpoints.animeList,
+      path: ApiEndpoints.explore,
       builder: (BuildContext context, GoRouterState state) {
         return const ExplorePage();
+      },
+    ),
+    GoRoute(
+      path: ApiEndpoints.ongoing,
+      builder: (BuildContext context, GoRouterState state) {
+        return const OngoingPage();
       },
     ),
     GoRoute(
