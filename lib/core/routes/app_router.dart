@@ -3,9 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:xnime_app/core/routes/api_endpoints.dart';
 import 'package:xnime_app/main.dart';
 import 'package:xnime_app/pages/explore_page.dart';
+import 'package:xnime_app/pages/home/completed_page.dart';
 import 'package:xnime_app/pages/home_page.dart';
 import 'package:xnime_app/pages/onBoarding/onboarding_screen.dart';
-import 'package:xnime_app/pages/ongoing_page.dart';
+import 'package:xnime_app/pages/home/ongoing_page.dart';
 import 'package:xnime_app/pages/search_page.dart';
 import 'package:xnime_app/pages/splash_screen.dart';
 
@@ -46,6 +47,12 @@ final GoRouter router = GoRouter(
       path: ApiEndpoints.ongoing,
       builder: (BuildContext context, GoRouterState state) {
         return const OngoingPage();
+      },
+    ),
+    GoRoute(
+      path: ApiEndpoints.completed,
+      builder: (BuildContext context, GoRouterState state) {
+        return const CompletedPage();
       },
     ),
     GoRoute(

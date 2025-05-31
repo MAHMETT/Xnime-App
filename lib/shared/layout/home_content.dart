@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xnime_app/data/models/home/home_model.dart';
 import 'package:xnime_app/data/service/api_service.dart';
 import 'package:xnime_app/shared/widgets/anime_card.dart';
+import 'package:xnime_app/shared/widgets/error_404.dart';
 import 'package:xnime_app/shared/widgets/title_see_all.dart';
 
 class HomeContent extends StatefulWidget {
@@ -43,7 +43,7 @@ class _HomeContentState extends State<HomeContent> {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return Center(child: SvgPicture.asset('assets/images/404.svg'));
+            return Error404();
           }
 
           final animeList = snapshot.data!;

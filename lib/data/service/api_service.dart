@@ -43,10 +43,37 @@ class ApiService {
     }
   }
 
-  Future<List<dynamic>> fetchOngoing() async {
+  // Future<List<dynamic>> fetchOngoing() async {
+  //   try {
+  //     final response = await _dio.get('/ongoing');
+  //     return response.data['data']['animeList'];
+  //   } on DioException catch (e) {
+  //     throw Exception(_handleError(e));
+  //   }
+  // }
+
+  Future<List<dynamic>> fetchExplore() async {
     try {
       final response = await _dio.get('/ongoing');
       return response.data['data']['animeList'];
+    } on DioException catch (e) {
+      throw Exception(_handleError(e));
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchOngoing({int page = 1}) async {
+    try {
+      final response = await _dio.get('/ongoing?page=$page');
+      return response.data;
+    } on DioException catch (e) {
+      throw Exception(_handleError(e));
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchCompleted({int page = 1}) async {
+    try {
+      final response = await _dio.get('/completed?page=$page');
+      return response.data;
     } on DioException catch (e) {
       throw Exception(_handleError(e));
     }

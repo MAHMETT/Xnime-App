@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xnime_app/core/theme/app_colors.dart';
 import 'package:xnime_app/core/theme/app_text_styles.dart';
 import 'package:xnime_app/data/models/anime_items_model.dart';
 import 'package:xnime_app/data/service/api_service.dart';
 import 'package:xnime_app/shared/widgets/anime_card.dart';
+import 'package:xnime_app/shared/widgets/error_404.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -79,9 +79,7 @@ class _SearchPageState extends State<SearchPage> {
                           );
                         }
                         if (snapshot.hasError) {
-                          return Center(
-                            child: SvgPicture.asset('assets/images/404.svg'),
-                          );
+                          return Error404();
                         }
 
                         final results = snapshot.data!;
