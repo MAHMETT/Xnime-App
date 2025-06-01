@@ -48,8 +48,6 @@ class _CustomGenreButtonState extends State<CustomGenreButton> {
       child: GestureDetector(
         // onTap: widget.onPressed,
         child: AnimatedContainer(
-          alignment: Alignment.center,
-          // width: widget.width,
           duration: const Duration(milliseconds: 200),
           padding: widget.padding,
           decoration: BoxDecoration(
