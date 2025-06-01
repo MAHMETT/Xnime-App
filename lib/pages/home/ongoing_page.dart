@@ -92,6 +92,7 @@ class _OngoingPageState extends State<OngoingPage> {
                   children:
                       _animeList.map((anime) {
                         return AnimeCard(
+                          animeId: anime.animeId,
                           imagePath: anime.poster,
                           title: anime.title,
                           episodes: anime.episodes.toString(),

@@ -97,6 +97,7 @@ class _SearchPageState extends State<SearchPage> {
                               children:
                                   results.map((anime) {
                                     return AnimeCard(
+                                      animeId: anime.animeId,
                                       imagePath: anime.poster,
                                       title: anime.title,
                                       rating: anime.score,

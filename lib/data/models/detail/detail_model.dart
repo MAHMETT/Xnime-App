@@ -13,7 +13,7 @@ class DetailModel {
   final String duration;
   final String aired;
   final String studios;
-  final List<SynopsisSection> synopsis;
+  final SynopsisSection? synopsis;
   final List<GenreItemsModel> genreList;
   final List<EpisodeList> episodeList;
   final List<RecommendedAnime> recommendedAnimeList;
@@ -44,10 +44,15 @@ class DetailModel {
     duration: json['duration'],
     aired: json['aired'],
     studios: json['studios'],
+    // synopsis:
+    //     (json['synopsis'] as List)
+    //         .map((synopsis) => SynopsisSection.fromJson(synopsis))
+    //         .toList(),
+    // synopsis: [SynopsisSection.fromJson(json['synopsis'])],
     synopsis:
-        (json['synopsis'] as List)
-            .map((synopsis) => SynopsisSection.fromJson(synopsis))
-            .toList(),
+        json['synopsis'] != null
+            ? SynopsisSection.fromJson(json['synopsis'])
+            : null,
     genreList:
         (json['genreList'] as List)
             .map((genre) => GenreItemsModel.fromJson(genre))
@@ -72,7 +77,9 @@ class DetailModel {
     "duration": duration,
     "aired": aired,
     "studios": studios,
-    "synopsis": synopsis.map((s) => s.toJson()).toList(),
+    // "synopsis": synopsis.map((s) => s.toJson()).toList(),"synopsis": synopsis?.toJson(),
+    // "synopsis": synopsis,
+    "synopsis": synopsis?.toJson(),
     "genreList": genreList.map((g) => g.toJson()).toList(),
     "episodeList": episodeList.map((e) => e.toJson()).toList(),
     "recommendedAnimeList":

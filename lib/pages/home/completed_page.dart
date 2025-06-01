@@ -92,6 +92,7 @@ class _CompletedPageState extends State<CompletedPage> {
                   children:
                       _animeList.map((anime) {
                         return AnimeCard(
+                          animeId: anime.animeId,
                           imagePath: anime.poster,
                           title: anime.title,
                           episodes: anime.episodes.toString(),

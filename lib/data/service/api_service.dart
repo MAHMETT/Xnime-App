@@ -3,6 +3,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:xnime_app/data/models/anime_items_model.dart';
+import 'package:xnime_app/data/models/detail/detail_model.dart';
 import 'package:xnime_app/data/models/home/home_model.dart';
 
 class ApiService {
@@ -115,6 +116,12 @@ class ApiService {
     final data = await fetchSearch(query);
     final List<dynamic> rawList = data['data']['animeList'];
     return rawList.map((json) => AnimeItems.fromJson(json)).toList();
+  }
+
+  Future<DetailModel> fetchDetailAnime(String animeId) async {
+    final response = await _dio.get('/anime/$animeId');
+    final data = response.data['data'];
+    return DetailModel.fromJson(data);
   }
 
   String _handleError(DioException error) {

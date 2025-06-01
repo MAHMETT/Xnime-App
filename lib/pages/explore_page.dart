@@ -58,6 +58,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 children:
                     animeList.map((anime) {
                       return AnimeCard(
+                        animeId: anime.animeId,
                         imagePath: anime.poster,
                         title: anime.title,
                         episodes: anime.episodes.toString(),

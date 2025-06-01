@@ -64,6 +64,7 @@ class _HomeContentState extends State<HomeContent> {
                     children:
                         animeList.ongoing.take(9).map((anime) {
                           return AnimeCard(
+                            animeId: anime.animeId,
                             imagePath: anime.poster,
                             title: anime.title,
                             episodes: anime.episodes.toString(),
@@ -80,6 +81,7 @@ class _HomeContentState extends State<HomeContent> {
                       children:
                           animeList.completed.take(9).map((anime) {
                             return AnimeCard(
+                              animeId: anime.animeId,
                               imagePath: anime.poster,
                               title: anime.title,
                               episodes: anime.episodes.toString(),

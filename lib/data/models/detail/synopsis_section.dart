@@ -1,9 +1,9 @@
 class SynopsisSection {
-  final List<String> paragraphs;
+  final List<String>? paragraphs;
   // final List<dynamic> connections;
 
   SynopsisSection({
-    required this.paragraphs,
+    this.paragraphs,
     // required this.connections
   });
 
