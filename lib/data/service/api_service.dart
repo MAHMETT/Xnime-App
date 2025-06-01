@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:xnime_app/data/models/anime_items_model.dart';
 import 'package:xnime_app/data/models/detail/detail_model.dart';
+import 'package:xnime_app/data/models/episode/episode_model.dart';
 import 'package:xnime_app/data/models/home/home_model.dart';
 
 class ApiService {
@@ -122,6 +123,12 @@ class ApiService {
     final response = await _dio.get('/anime/$animeId');
     final data = response.data['data'];
     return DetailModel.fromJson(data);
+  }
+
+  Future<EpisodeModel> fetchEpisodeAnime(String animeId) async {
+    final response = await _dio.get('/episode/$animeId');
+    final data = response.data['data'];
+    return EpisodeModel.fromJson(data);
   }
 
   String _handleError(DioException error) {

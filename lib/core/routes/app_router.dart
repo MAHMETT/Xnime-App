@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:xnime_app/core/routes/api_endpoints.dart';
 import 'package:xnime_app/main.dart';
 import 'package:xnime_app/pages/detail_page.dart';
+import 'package:xnime_app/pages/episode_page.dart';
 import 'package:xnime_app/pages/explore_page.dart';
 import 'package:xnime_app/pages/home/completed_page.dart';
 import 'package:xnime_app/pages/home_page.dart';
@@ -72,6 +73,18 @@ final GoRouter router = GoRouter(
           );
         }
         return DetailPage(animeId: animeId);
+      },
+    ),
+    GoRoute(
+      path: '/episode/:animeId',
+      builder: (context, state) {
+        final animeId = state.pathParameters['animeId'];
+        if (animeId == null) {
+          return const Scaffold(
+            body: Center(child: Text('Anime ID not found')),
+          );
+        }
+        return EpisodePage(animeId: animeId);
       },
     ),
   ],

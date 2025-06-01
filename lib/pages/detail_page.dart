@@ -26,14 +26,20 @@ class _DetailPageState extends State<DetailPage> {
   int selectedIndex = 0;
   final List<String> tabs = ["Episode", "Rekomendasi"];
 
-  Future<DetailModel> _fetchWithRetry() async {
-    while (true) {
+  Future<DetailModel> _fetchWithRetry({int maxRetry = 3}) async {
+    int retryCount = 0;
+
+    while (retryCount < maxRetry) {
       try {
         final detail = await _apiService.fetchDetailAnime(widget.animeId);
         return detail;
-      } catch (_) {}
-      await Future.delayed(const Duration(seconds: 3)); // delay sebelum retry
+      } catch (_) {
+        retryCount++;
+        await Future.delayed(const Duration(seconds: 10));
+      }
     }
+
+    throw Exception('Gagal memuat data setelah $maxRetry percobaan');
   }
 
   @override
@@ -247,7 +253,11 @@ class _DetailPageState extends State<DetailPage> {
                                                 "Episode ${e.title}",
                                                 style: AppTextStyles.sm,
                                               ),
-                                              onTap: () {},
+                                              onTap: () {
+                                                context.push(
+                                                  '/episode/${e.episodeId}',
+                                                );
+                                              },
                                             ),
                                           )
                                           .toList(),
