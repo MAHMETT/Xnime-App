@@ -51,10 +51,11 @@ flutter:
         - asset: assets/fonts/poppins/Poppins-MediumItalic.ttf
           style: italic
 
-flutter_launcher_icons:
-  image_path: "assets/logos/Xyutori.png"
+flutter_icons:
   android: true
   ios: true
   linux: true
   windows: true
   macos: true
+  image_path: "assets/logos/Xyutori.png"
+  min_sdk_android: 21

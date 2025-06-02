@@ -10,3 +10,4 @@ class AppColors {
   static const error = Color(0xFFEF5350);
   static const surface = Color(0xFF1E1E1E);
 }
+/otakudesu/anime/high-school-dead-subtitle-indones

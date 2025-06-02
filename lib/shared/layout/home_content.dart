@@ -48,38 +48,20 @@ class _HomeContentState extends State<HomeContent> {
 
           final animeList = snapshot.data!;
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(10, 20, 20, 10),
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TitleSeeAll(goTo: '/ongoing', title: 'Episode Terbaru'),
-                  const SizedBox(height: 20),
-                  Wrap(
-                    spacing: 15,
-                    alignment: WrapAlignment.spaceBetween,
-                    runSpacing: 15,
-                    children:
-                        animeList.ongoing.take(9).map((anime) {
-                          return AnimeCard(
-                            animeId: anime.animeId,
-                            imagePath: anime.poster,
-                            title: anime.title,
-                            episodes: anime.episodes.toString(),
-                          );
-                        }).toList(),
-                  ),
-                  const SizedBox(height: 20),
-                  TitleSeeAll(goTo: '/completed', title: 'Selesai Tayang'),
-                  const SizedBox(height: 20),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
+          return Column(
+            children: [
+              Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TitleSeeAll(goTo: '/ongoing', title: 'Episode Terbaru'),
+                    const SizedBox(height: 20),
+                    Wrap(
                       spacing: 15,
+                      alignment: WrapAlignment.spaceBetween,
+                      runSpacing: 15,
                       children:
-                          animeList.completed.take(9).map((anime) {
+                          animeList.ongoing.take(9).map((anime) {
                             return AnimeCard(
                               animeId: anime.animeId,
                               imagePath: anime.poster,
@@ -88,11 +70,29 @@ class _HomeContentState extends State<HomeContent> {
                             );
                           }).toList(),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                ],
+                    const SizedBox(height: 20),
+                    TitleSeeAll(goTo: '/completed', title: 'Selesai Tayang'),
+                    const SizedBox(height: 20),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        spacing: 15,
+                        children:
+                            animeList.completed.take(9).map((anime) {
+                              return AnimeCard(
+                                animeId: anime.animeId,
+                                imagePath: anime.poster,
+                                title: anime.title,
+                                episodes: anime.episodes.toString(),
+                              );
+                            }).toList(),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                ),
               ),
-            ),
+            ],
           );
         },
       ),
