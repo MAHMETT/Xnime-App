@@ -121,8 +121,19 @@ class ApiService {
 
   Future<DetailModel> fetchDetailAnime(String animeId) async {
     final response = await _dio.get('/anime/$animeId');
-    final data = response.data['data'];
-    return DetailModel.fromJson(data);
+    final jsonMap = response.data as Map<String, dynamic>;
+
+    final bool ok = jsonMap['ok'] as bool? ?? false;
+    final int statusCode = jsonMap['statusCode'] as int? ?? 0;
+
+    if (ok == true && statusCode == 200) {
+      final data = jsonMap['data'] as Map<String, dynamic>;
+      return DetailModel.fromJson(data);
+    } else {
+      throw Exception(
+        'Fetch detail gagal: statusCode=$statusCode, ok=$ok, message=${jsonMap['message']}',
+      );
+    }
   }
 
   Future<EpisodeModel> fetchEpisodeAnime(String animeId) async {

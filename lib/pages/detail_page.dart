@@ -1,6 +1,9 @@
 import 'dart:async';
 
+// import 'package:flutter/foundation.dart'; // untuk compute (optional, jika parse berat)
+// (Jika parsing tidak terlalu berat, compute bisa diabaikan.)
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:xnime_app/core/theme/app_colors.dart';
 import 'package:xnime_app/core/theme/app_text_styles.dart';
@@ -20,32 +23,22 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
-  Timer? _retryTimer;
   final ApiService _apiService = ApiService();
-  late Future<DetailModel> _futureDetail;
-  int selectedIndex = 0;
-  final List<String> tabs = ["Episode", "Rekomendasi"];
 
-  Future<DetailModel> _fetchWithRetry({int maxRetry = 3}) async {
-    int retryCount = 0;
+  DetailModel? _detail; // Akan di‐set begitu parsing data selesai
+  bool _isLoading = true; // True selama fetch/parsing
+  bool hasError = false; // True jika fetchDetailAnime melempar exception
 
-    while (retryCount < maxRetry) {
-      try {
-        final detail = await _apiService.fetchDetailAnime(widget.animeId);
-        return detail;
-      } catch (_) {
-        retryCount++;
-        await Future.delayed(const Duration(seconds: 10));
-      }
-    }
+  Timer? _retryTimer; // Untuk retry otomatis jika error
 
-    throw Exception('Gagal memuat data setelah $maxRetry percobaan');
-  }
+  // Tab (0 = Episode, 1 = Rekomendasi)
+  int _selectedIndex = 0;
+  final List<String> _tabs = ["Episode", "Rekomendasi"];
 
   @override
   void initState() {
     super.initState();
-    _futureDetail = _fetchWithRetry();
+    _fetchDetailOnce();
   }
 
   @override
@@ -54,236 +47,310 @@ class _DetailPageState extends State<DetailPage> {
     super.dispose();
   }
 
+  /// Melakukan satu kali panggilan ke service.
+  /// Jika berhasil, set _detail dan berhenti loading.
+  /// Jika exception, set hasError dan jadwalkan retry setelah 10 detik.
+  Future<void> _fetchDetailOnce() async {
+    // Batalkan timer retry sebelumnya (jika ada)
+    _retryTimer?.cancel();
+
+    setState(() {
+      _isLoading = true;
+      hasError = false;
+    });
+
+    try {
+      // Panggil service yang sudah mengecek JSON status di dalamnya
+      final detailResult = await _apiService.fetchDetailAnime(widget.animeId);
+
+      // Jika sampai di sini tidak exception, berarti status == 200 dan JSON berhasil di‐parse
+      setState(() {
+        _detail = detailResult;
+        _isLoading = false;
+        hasError = false;
+      });
+    } catch (e) {
+      // Jika throws (bisa karena status != 200, parsing error, atau network error)
+      setState(() {
+        hasError = true;
+        _isLoading = false;
+      });
+
+      // Jadwalkan retry otomatis dalam 10 detik
+      _retryTimer = Timer(const Duration(seconds: 10), () {
+        _fetchDetailOnce();
+      });
+    }
+  }
+
+  /// Pull-to-refresh: membatalkan retry timer dan fetch lagi langsung
+  Future<void> _onRefresh() async {
+    _retryTimer?.cancel();
+    await _fetchDetailOnce();
+    // Beri delay supaya RefreshIndicator terlihat minimal 300ms
+    await Future.delayed(const Duration(milliseconds: 300));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder<DetailModel>(
-        future: _futureDetail,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Error404();
-          } else if (!snapshot.hasData) {
-            return const Center(child: Text('Tidak ada data'));
-          }
-          // lanjut tampilkan UI normal...
+    // Jika masih loading dan data belum ada, tampilkan spinner
+    if (_isLoading && _detail == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
 
-          final detail = snapshot.data!;
-          final paragraphs = detail.synopsis?.paragraphs ?? [];
-          final double widthPoster = MediaQuery.of(context).size.width;
-          final double heightPoster = widthPoster * 0.6;
+    // Jika data sudah tersedia, tampilkan UI lengkap
+    if (_detail != null) {
+      final detail = _detail!;
+      final screenWidth = MediaQuery.of(context).size.width;
+      final posterHeight = screenWidth * 0.6;
 
-          return SingleChildScrollView(
-            // padding: const EdgeInsets.all(16),
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.dark,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset('assets/logos/Xyutori.svg', width: 30),
+              const SizedBox(width: 8),
+              Text('Xnime', style: AppTextStyles.xlBold),
+            ],
+          ),
+        ),
+        body: RefreshIndicator(
+          backgroundColor: AppColors.dark,
+          onRefresh: _onRefresh,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Poster dan Judul
-                Center(
-                  child: Stack(
-                    children: [
-                      // Thumbnail
-                      Image.network(
-                        detail.poster,
-                        width: widthPoster,
-                        height: heightPoster,
-                        fit: BoxFit.cover,
-                      ),
-                      // Button Back
-                      Positioned(
-                        top: 10,
-                        left: 10,
-                        child: CircleAvatar(
-                          backgroundColor: AppColors.dark.withValues(
-                            alpha: 0.7,
+                //===== Poster + Back Button =====//
+                Stack(
+                  children: [
+                    Image.network(
+                      detail.poster,
+                      width: screenWidth,
+                      height: posterHeight,
+                      fit: BoxFit.cover,
+                    ),
+                    Positioned(
+                      top: 10,
+                      left: 10,
+                      child: CircleAvatar(
+                        backgroundColor: AppColors.dark.withValues(alpha: 0.7),
+                        child: IconButton(
+                          onPressed: () => context.pop(),
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: AppColors.light,
                           ),
-                          child: IconButton(
-                            onPressed: () {
-                              context.pop();
-                            },
-                            icon: Icon(
-                              Icons.arrow_back,
-                              color: AppColors.light,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 20),
+
+                //===== Info Header (judul, rating, aired, status, genre) =====//
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(detail.title, style: AppTextStyles.lgBold),
+
+                      const SizedBox(height: 10),
+
+                      Row(
+                        children: [
+                          Icon(Icons.star, size: 20, color: Colors.amber[700]),
+                          const SizedBox(width: 4),
+                          Text(
+                            detail.score.isEmpty ? 'No rating' : detail.score,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.amber[700],
                             ),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    spacing: 5,
-                    children: [
-                      // Header
-                      Column(
-                        spacing: 10,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(detail.title, style: AppTextStyles.lgBold),
-                          // Sub
-                          Row(
-                            spacing: 10,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.star,
-                                    size: 20,
-                                    color: Colors.amber[700],
-                                  ),
-                                  Text(
-                                    detail.score == ''
-                                        ? 'No rating'
-                                        : detail.score,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.amber[700],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const Text('-'),
-                              Text(
-                                detail.aired,
-                                style: AppTextStyles.smSemiBold,
-                              ),
-                              const Text('-'),
-                              Text(
-                                detail.status,
-                                style: AppTextStyles.smSemiBold,
-                              ),
-                            ],
-                          ),
-                          // Genere
-                          Wrap(
-                            spacing: 10,
-                            runSpacing: 10,
-                            children:
-                                detail.genreList
-                                    .map(
-                                      (g) => CustomGenreButton(text: g.title),
-                                    )
-                                    .toList(),
-                          ),
-                          // Studios and Producers
+                          const SizedBox(width: 8),
+                          const Text('-'),
+                          const SizedBox(width: 8),
+                          Text(detail.aired, style: AppTextStyles.smSemiBold),
+                          const SizedBox(width: 8),
+                          const Text('-'),
+                          const SizedBox(width: 8),
+                          Text(detail.status, style: AppTextStyles.smSemiBold),
                         ],
                       ),
-                      Column(
-                        spacing: 5,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            spacing: 5,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Studio :', style: AppTextStyles.smBold),
-                              Flexible(
-                                child: Text(
-                                  detail.studios,
-                                  style: AppTextStyles.sm,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            spacing: 5,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Produser :', style: AppTextStyles.smBold),
-                              Flexible(
-                                child: Text(
-                                  detail.producers,
-                                  style: AppTextStyles.sm,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      // Synopsis
-                      ...paragraphs.map(
-                        (p) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Text(p, style: AppTextStyles.sm),
-                        ),
-                      ),
-                      // Episode
-                      // Toggle Tab
-                      Center(
-                        child: ToggleButtons(
-                          textStyle: AppTextStyles.smBold,
-                          isSelected: List.generate(
-                            tabs.length,
-                            (i) => selectedIndex == i,
-                          ),
-                          onPressed: (index) {
-                            setState(() => selectedIndex = index);
-                          },
-                          borderRadius: BorderRadius.circular(10),
-                          selectedColor: AppColors.light,
-                          fillColor: AppColors.primary,
-                          color: AppColors.light,
-                          constraints: const BoxConstraints(
-                            minHeight: 40,
-                            // minWidth: 200,
-                            minWidth: 150,
-                          ),
-                          children: tabs.map((t) => Text(t)).toList(),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
 
-                      // Konten berdasarkan pilihan
-                      AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 300),
-                        child:
-                            selectedIndex == 0
-                                ? Column(
-                                  children:
-                                      detail.episodeList
-                                          .map(
-                                            (e) => ListTile(
-                                              title: Text(
-                                                "Episode ${e.title}",
-                                                style: AppTextStyles.sm,
-                                              ),
-                                              onTap: () {
-                                                context.push(
-                                                  '/episode/${e.episodeId}',
-                                                );
-                                              },
-                                            ),
-                                          )
-                                          .toList(),
-                                )
-                                : Wrap(
-                                  spacing: 10,
-                                  runSpacing: 10,
-                                  children:
-                                      detail.recommendedAnimeList
-                                          .map(
-                                            (r) => AnimeCard(
-                                              imagePath: r.poster,
-                                              title: r.title,
-                                              animeId: r.animeId,
-                                            ),
-                                          )
-                                          .toList(),
-                                ),
+                      const SizedBox(height: 12),
+
+                      Wrap(
+                        spacing: 10,
+                        runSpacing: 10,
+                        children:
+                            detail.genreList
+                                .map((g) => CustomGenreButton(text: g.title))
+                                .toList(),
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      // Studio & Produser
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Studio : ', style: AppTextStyles.smBold),
+                          Expanded(
+                            child: Text(
+                              detail.studios,
+                              style: AppTextStyles.sm,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Produser : ', style: AppTextStyles.smBold),
+                          Expanded(
+                            child: Text(
+                              detail.producers,
+                              style: AppTextStyles.sm,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
+
+                const SizedBox(height: 20),
+
+                //===== Synopsis =====//
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children:
+                        detail.synopsis!.paragraphs
+                            ?.map(
+                              (p) => Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 4,
+                                ),
+                                child: Text(p, style: AppTextStyles.sm),
+                              ),
+                            )
+                            .toList() ??
+                        [],
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                //===== Toggle Tab (Episode / Rekomendasi) =====//
+                Center(
+                  child: ToggleButtons(
+                    isSelected: List.generate(
+                      _tabs.length,
+                      (i) => _selectedIndex == i,
+                    ),
+                    onPressed:
+                        (index) => setState(() => _selectedIndex = index),
+                    borderRadius: BorderRadius.circular(10),
+                    selectedColor: AppColors.light,
+                    fillColor: AppColors.primary,
+                    color: AppColors.light,
+                    constraints: const BoxConstraints(
+                      minHeight: 40,
+                      minWidth: 150,
+                    ),
+                    textStyle: AppTextStyles.smBold,
+                    children: _tabs.map((t) => Text(t)).toList(),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                //===== Konten Berdasarkan Tab =====//
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  child:
+                      _selectedIndex == 0
+                          // === Daftar Episode ===
+                          ? _buildEpisodeList(detail)
+                          // === Rekomendasi Anime ===
+                          : _buildRekomendasiGrid(detail),
+                ),
+
+                const SizedBox(height: 20),
               ],
             ),
-          );
-        },
+          ),
+        ),
+      );
+    }
+
+    // Jika bukan loading (isLoading == false) dan detail masih null, berarti error:
+    return const Scaffold(body: Center(child: Error404()));
+  }
+
+  /// Widget untuk daftar episode
+  Widget _buildEpisodeList(DetailModel detail) {
+    if (detail.episodeList.isEmpty) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 16),
+          child: Text('Tidak ada episode.'),
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+        children:
+            detail.episodeList.map((e) {
+              return ListTile(
+                title: Text("Episode ${e.title}", style: AppTextStyles.sm),
+                onTap: () {
+                  context.push('/episode/${e.episodeId}');
+                },
+                contentPadding: EdgeInsets.zero,
+              );
+            }).toList(),
+      ),
+    );
+  }
+
+  /// Widget untuk rekomendasi anime
+  Widget _buildRekomendasiGrid(DetailModel detail) {
+    if (detail.recommendedAnimeList.isEmpty) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 16),
+          child: Text('Belum ada rekomendasi.'),
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Wrap(
+        spacing: 10,
+        runSpacing: 10,
+        children:
+            detail.recommendedAnimeList.map((r) {
+              return AnimeCard(
+                animeId: r.animeId,
+                imagePath: r.poster,
+                title: r.title,
+              );
+            }).toList(),
       ),
     );
   }

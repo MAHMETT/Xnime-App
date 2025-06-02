@@ -15,16 +15,19 @@ final List<Map<String, dynamic>> imageData = [
     "path": "assets/images/boruto.jpg",
     "title": "Boruto",
     "genres": ["Action", "Adventure"],
+    "animeId": "borot-sub-indo",
   },
   {
     "path": "assets/images/one_piece.jpeg",
     "title": "One Piece",
     "genres": ["Adventure", "Fantasy"],
+    "animeId": "1piece-sub-indo",
   },
   {
     "path": "assets/images/one_punch_man.jpg",
     "title": "One Punch Man",
     "genres": ["Comedy", "Action"],
+    "animeId": "punch-man-season-2-subtitle-indonesia",
   },
 ];
 
@@ -46,6 +49,7 @@ class _BannerSliderState extends State<BannerSlider> {
         imagePath: item["path"],
         title: item["title"],
         genres: List<String>.from(item["genres"]),
+        animeId: item["animeId"],
       );
     });
     startTimer();

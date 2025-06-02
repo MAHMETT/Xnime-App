@@ -27,7 +27,6 @@ class _EpisodePageState extends State<EpisodePage> {
   void initState() {
     super.initState();
     _futureDetail = _fetchWithRetry();
-    // Hanya untuk Android: mengaktifkan hybrid composition
   }
 
   @override
@@ -77,17 +76,15 @@ class _EpisodePageState extends State<EpisodePage> {
 
           final detail = snapshot.data!;
 
-          // 1) Tampilkan detail teks seperti sebelumnya
-          // 2) Setelah itu, buat WebViewWidget untuk defaultStreamingUrl
           return Column(
             children: [
-              // --- Bagian WebView ---
+              // --- WebView ---
               Expanded(
                 child: WebViewContainer(url: detail.defaultStreamingUrl),
               ),
 
               const Divider(color: Colors.grey),
-              // --- Bagian detail teks (judul, genre, dll) ---
+              // --- (judul, genre, dll) ---
               Padding(
                 padding: const EdgeInsets.all(10),
                 child: Column(
@@ -102,7 +99,7 @@ class _EpisodePageState extends State<EpisodePage> {
                         Text(
                           detail.releaseTime,
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 12,
                             color: Colors.white.withValues(alpha: 0.7),
                           ),
                         ),
@@ -110,7 +107,7 @@ class _EpisodePageState extends State<EpisodePage> {
                         Text(
                           detail.info.credit,
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 12,
                             color: Colors.white.withValues(alpha: 0.7),
                           ),
                         ),
@@ -118,7 +115,7 @@ class _EpisodePageState extends State<EpisodePage> {
                         Text(
                           detail.info.encoder,
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 12,
                             color: Colors.white.withValues(alpha: 0.7),
                           ),
                         ),
@@ -126,7 +123,7 @@ class _EpisodePageState extends State<EpisodePage> {
                         Text(
                           detail.info.type,
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 12,
                             color: Colors.white.withValues(alpha: 0.7),
                           ),
                         ),
@@ -134,7 +131,7 @@ class _EpisodePageState extends State<EpisodePage> {
                         Text(
                           detail.info.duration,
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 12,
                             color: Colors.white.withValues(alpha: 0.7),
                           ),
                         ),
