@@ -47,11 +47,7 @@ class _DetailPageState extends State<DetailPage> {
     super.dispose();
   }
 
-  /// Melakukan satu kali panggilan ke service.
-  /// Jika berhasil, set _detail dan berhenti loading.
-  /// Jika exception, set hasError dan jadwalkan retry setelah 10 detik.
   Future<void> _fetchDetailOnce() async {
-    // Batalkan timer retry sebelumnya (jika ada)
     _retryTimer?.cancel();
 
     setState(() {
@@ -77,28 +73,24 @@ class _DetailPageState extends State<DetailPage> {
       });
 
       // Jadwalkan retry otomatis dalam 10 detik
-      _retryTimer = Timer(const Duration(seconds: 10), () {
+      _retryTimer = Timer(const Duration(seconds: 20), () {
         _fetchDetailOnce();
       });
     }
   }
 
-  /// Pull-to-refresh: membatalkan retry timer dan fetch lagi langsung
   Future<void> _onRefresh() async {
     _retryTimer?.cancel();
     await _fetchDetailOnce();
-    // Beri delay supaya RefreshIndicator terlihat minimal 300ms
     await Future.delayed(const Duration(milliseconds: 300));
   }
 
   @override
   Widget build(BuildContext context) {
-    // Jika masih loading dan data belum ada, tampilkan spinner
     if (_isLoading && _detail == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    // Jika data sudah tersedia, tampilkan UI lengkap
     if (_detail != null) {
       final detail = _detail!;
       final screenWidth = MediaQuery.of(context).size.width;
@@ -133,20 +125,21 @@ class _DetailPageState extends State<DetailPage> {
                       height: posterHeight,
                       fit: BoxFit.cover,
                     ),
-                    Positioned(
-                      top: 10,
-                      left: 10,
-                      child: CircleAvatar(
-                        backgroundColor: AppColors.dark.withValues(alpha: 0.7),
-                        child: IconButton(
-                          onPressed: () => context.pop(),
-                          icon: const Icon(
-                            Icons.arrow_back,
-                            color: AppColors.light,
-                          ),
-                        ),
-                      ),
-                    ),
+                    //==== Back Button ====//
+                    // Positioned(
+                    //   top: 10,
+                    //   left: 10,
+                    //   child: CircleAvatar(
+                    //     backgroundColor: AppColors.dark.withValues(alpha: 0.7),
+                    //     child: IconButton(
+                    //       onPressed: () => context.pop(),
+                    //       icon: const Icon(
+                    //         Icons.arrow_back,
+                    //         color: AppColors.light,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
 
