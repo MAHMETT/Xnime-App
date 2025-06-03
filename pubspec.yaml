@@ -18,15 +18,30 @@ dependencies:
     flutter_launcher_icons: ^0.14.3
     smooth_page_indicator: ^1.2.1
     curved_labeled_navigation_bar: ^2.0.6
-    video_player: ^2.9.5
     chewie: ^1.11.3
     webview_flutter: ^4.13.0
     http: ^1.4.0
+    flutter_native_splash: ^2.4.6
 
 dev_dependencies:
     flutter_test:
         sdk: flutter
     flutter_lints: ^5.0.0
+
+flutter_native_splash:
+  color: "#131517"
+  image: "assets/logos/Xyutori.png"
+  android: true
+  ios: true
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path_android: "assets/logos/icon_background.png"
+  image_path_ios: "assets/logos/icon_background.png"
+  # ↓ Dua opsi untuk adaptive icon Android ↓
+  android_adaptive_icon_foreground: "assets/logos/icon_foreground.png"
+  android_adaptive_icon_background: "assets/logos/icon_background.png"
 
 flutter:
   uses-material-design: true
@@ -37,6 +52,7 @@ flutter:
     - assets/videos/
     - assets/logos/Xyutori.svg
     - assets/logos/Xyutori.png
+    - assets/logos/
   fonts:
     - family: Poppins
       fonts:
@@ -50,12 +66,3 @@ flutter:
           weight: 700
         - asset: assets/fonts/poppins/Poppins-MediumItalic.ttf
           style: italic
-
-flutter_icons:
-  android: true
-  ios: true
-  linux: true
-  windows: true
-  macos: true
-  image_path: "assets/logos/Xyutori.png"
-  min_sdk_android: 21

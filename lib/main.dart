@@ -50,45 +50,68 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int currentIndex = 0;
 
-  // final screens = [HomePage(), SearchPage(), ExplorePage()];
-
-  // ✅ Simpan halaman yang sudah dirender
+  // Menyimpan halaman agar cuma dirender sekali
   final List<Widget?> _pages = List.filled(3, null);
 
-  // ✅ Render hanya saat pertama dibuka
   Widget screens(int index) {
     if (_pages[index] != null) return _pages[index]!;
 
     switch (index) {
       case 0:
-        _pages[0] = const HomePage(); // Page 1
+        _pages[0] = const HomePage();
         break;
       case 1:
-        _pages[1] = const SearchPage(); // Page 2
+        _pages[1] = const SearchPage();
         break;
       case 2:
-        _pages[2] = const ExplorePage(); // Page 3
+        _pages[2] = const ExplorePage();
         break;
     }
     return _pages[index]!;
   }
 
-  final items = <CurvedNavigationBarItem>[
-    CurvedNavigationBarItem(
-      child: Icon(Icons.home, size: 30, color: Colors.white),
-      label: 'Home',
-    ),
-    CurvedNavigationBarItem(
-      child: Icon(Icons.search, size: 30, color: Colors.white),
-      label: 'Search',
-    ),
-    CurvedNavigationBarItem(
-      child: Icon(Icons.explore, size: 30, color: Colors.white),
-      label: 'Explore',
-    ),
-  ];
   @override
   Widget build(BuildContext context) {
+    // Buat ulang items di tiap build(), agar icon-nya bisa berubah warna
+    final items = <CurvedNavigationBarItem>[
+      CurvedNavigationBarItem(
+        labelStyle:
+            (currentIndex == 0)
+                ? AppTextStylesPrimary.xsBold
+                : AppTextStyles.xsBold,
+        child: Icon(
+          Icons.home,
+          size: 25,
+          color: (currentIndex == 0) ? Colors.blue : Colors.white,
+        ),
+        label: 'Home',
+      ),
+      CurvedNavigationBarItem(
+        labelStyle:
+            (currentIndex == 1)
+                ? AppTextStylesPrimary.xsBold
+                : AppTextStyles.xsBold,
+        child: Icon(
+          Icons.search,
+          size: 25,
+          color: (currentIndex == 1) ? Colors.blue : Colors.white,
+        ),
+        label: 'Search',
+      ),
+      CurvedNavigationBarItem(
+        labelStyle:
+            (currentIndex == 2)
+                ? AppTextStylesPrimary.xsBold
+                : AppTextStyles.xsBold,
+        child: Icon(
+          Icons.explore,
+          size: 25,
+          color: (currentIndex == 2) ? Colors.blue : Colors.white,
+        ),
+        label: 'Explore',
+      ),
+    ];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.dark,
@@ -104,7 +127,6 @@ class _MainPageState extends State<MainPage> {
         index: currentIndex,
         children: List.generate(_pages.length, (i) => screens(i)),
       ),
-
       bottomNavigationBar: CurvedNavigationBar(
         index: currentIndex,
         items: items,

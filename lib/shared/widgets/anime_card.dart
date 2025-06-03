@@ -54,7 +54,10 @@ class AnimeCard extends StatelessWidget {
                         color: AppColors.black,
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      child: Text('Ep $episodes', style: AppTextStyles.xs),
+                      child: Text(
+                        'Ep $episodes',
+                        style: AppTextStyles.xsSemiBold,
+                      ),
                     ),
                   ),
                 if (rating != null && rating!.isNotEmpty)

@@ -1,9 +1,6 @@
 import 'dart:async';
-
-// import 'package:flutter/foundation.dart'; // untuk compute (optional, jika parse berat)
-// (Jika parsing tidak terlalu berat, compute bisa diabaikan.)
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+// import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:xnime_app/core/theme/app_colors.dart';
 import 'package:xnime_app/core/theme/app_text_styles.dart';
@@ -25,13 +22,12 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   final ApiService _apiService = ApiService();
 
-  DetailModel? _detail; // Akan di‐set begitu parsing data selesai
-  bool _isLoading = true; // True selama fetch/parsing
-  bool hasError = false; // True jika fetchDetailAnime melempar exception
+  DetailModel? _detail;
+  bool _isLoading = true;
+  bool hasError = false;
 
-  Timer? _retryTimer; // Untuk retry otomatis jika error
+  Timer? _retryTimer;
 
-  // Tab (0 = Episode, 1 = Rekomendasi)
   int _selectedIndex = 0;
   final List<String> _tabs = ["Episode", "Rekomendasi"];
 
@@ -56,24 +52,20 @@ class _DetailPageState extends State<DetailPage> {
     });
 
     try {
-      // Panggil service yang sudah mengecek JSON status di dalamnya
       final detailResult = await _apiService.fetchDetailAnime(widget.animeId);
 
-      // Jika sampai di sini tidak exception, berarti status == 200 dan JSON berhasil di‐parse
       setState(() {
         _detail = detailResult;
         _isLoading = false;
         hasError = false;
       });
     } catch (e) {
-      // Jika throws (bisa karena status != 200, parsing error, atau network error)
       setState(() {
         hasError = true;
         _isLoading = false;
       });
 
-      // Jadwalkan retry otomatis dalam 10 detik
-      _retryTimer = Timer(const Duration(seconds: 20), () {
+      _retryTimer = Timer(const Duration(seconds: 10), () {
         _fetchDetailOnce();
       });
     }
@@ -94,20 +86,20 @@ class _DetailPageState extends State<DetailPage> {
     if (_detail != null) {
       final detail = _detail!;
       final screenWidth = MediaQuery.of(context).size.width;
-      final posterHeight = screenWidth * 0.6;
+      final posterHeight = screenWidth * 0.8;
 
       return Scaffold(
-        appBar: AppBar(
-          backgroundColor: AppColors.dark,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset('assets/logos/Xyutori.svg', width: 30),
-              const SizedBox(width: 8),
-              Text('Xnime', style: AppTextStyles.xlBold),
-            ],
-          ),
-        ),
+        // appBar: AppBar(
+        //   backgroundColor: AppColors.dark,
+        //   title: Row(
+        //     mainAxisAlignment: MainAxisAlignment.center,
+        //     children: [
+        //       SvgPicture.asset('assets/logos/Xyutori.svg', width: 30),
+        //       const SizedBox(width: 8),
+        //       Text('Xnime', style: AppTextStyles.xlBold),
+        //     ],
+        //   ),
+        // ),
         body: RefreshIndicator(
           backgroundColor: AppColors.dark,
           onRefresh: _onRefresh,
@@ -126,20 +118,20 @@ class _DetailPageState extends State<DetailPage> {
                       fit: BoxFit.cover,
                     ),
                     //==== Back Button ====//
-                    // Positioned(
-                    //   top: 10,
-                    //   left: 10,
-                    //   child: CircleAvatar(
-                    //     backgroundColor: AppColors.dark.withValues(alpha: 0.7),
-                    //     child: IconButton(
-                    //       onPressed: () => context.pop(),
-                    //       icon: const Icon(
-                    //         Icons.arrow_back,
-                    //         color: AppColors.light,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
+                    Positioned(
+                      top: 10,
+                      left: 10,
+                      child: CircleAvatar(
+                        backgroundColor: AppColors.dark.withValues(alpha: 0.7),
+                        child: IconButton(
+                          onPressed: () => context.pop(),
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: AppColors.light,
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
 
@@ -155,7 +147,7 @@ class _DetailPageState extends State<DetailPage> {
 
                       const SizedBox(height: 10),
 
-                      Row(
+                      Wrap(
                         children: [
                           Icon(Icons.star, size: 20, color: Colors.amber[700]),
                           const SizedBox(width: 4),
@@ -192,28 +184,39 @@ class _DetailPageState extends State<DetailPage> {
                       const SizedBox(height: 16),
 
                       // Studio & Produser
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Table(
+                        // border:TableBorder,
+                        columnWidths: const {
+                          0: FlexColumnWidth(3),
+                          1: FlexColumnWidth(0.5),
+                          2: FlexColumnWidth(5),
+                        },
                         children: [
-                          Text('Studio : ', style: AppTextStyles.smBold),
-                          Expanded(
-                            child: Text(
-                              detail.studios,
-                              style: AppTextStyles.sm,
-                            ),
+                          TableRow(
+                            children: [
+                              Text('Studios', style: AppTextStyles.smBold),
+                              Text(':', style: AppTextStyles.smBold),
+                              Text(
+                                detail.studios,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white.withValues(alpha: 0.7),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 6),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Produser : ', style: AppTextStyles.smBold),
-                          Expanded(
-                            child: Text(
-                              detail.producers,
-                              style: AppTextStyles.sm,
-                            ),
+                          TableRow(
+                            children: [
+                              Text('Producers', style: AppTextStyles.smBold),
+                              Text(':', style: AppTextStyles.smBold),
+                              Text(
+                                detail.producers,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white.withValues(alpha: 0.7),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -288,11 +291,9 @@ class _DetailPageState extends State<DetailPage> {
       );
     }
 
-    // Jika bukan loading (isLoading == false) dan detail masih null, berarti error:
     return const Scaffold(body: Center(child: Error404()));
   }
 
-  /// Widget untuk daftar episode
   Widget _buildEpisodeList(DetailModel detail) {
     if (detail.episodeList.isEmpty) {
       return const Center(
@@ -320,7 +321,6 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 
-  /// Widget untuk rekomendasi anime
   Widget _buildRekomendasiGrid(DetailModel detail) {
     if (detail.recommendedAnimeList.isEmpty) {
       return const Center(
@@ -333,17 +333,19 @@ class _DetailPageState extends State<DetailPage> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Wrap(
-        spacing: 10,
-        runSpacing: 10,
-        children:
-            detail.recommendedAnimeList.map((r) {
-              return AnimeCard(
-                animeId: r.animeId,
-                imagePath: r.poster,
-                title: r.title,
-              );
-            }).toList(),
+      child: Center(
+        child: Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children:
+              detail.recommendedAnimeList.map((r) {
+                return AnimeCard(
+                  animeId: r.animeId,
+                  imagePath: r.poster,
+                  title: r.title,
+                );
+              }).toList(),
+        ),
       ),
     );
   }

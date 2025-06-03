@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:xnime_app/core/routes/api_endpoints.dart';
 import 'package:xnime_app/main.dart';
 import 'package:xnime_app/pages/detail_page.dart';
-import 'package:xnime_app/pages/episode_page.dart';
+import 'package:xnime_app/pages/stream_page.dart';
 import 'package:xnime_app/pages/explore_page.dart';
 import 'package:xnime_app/pages/home/completed_page.dart';
 import 'package:xnime_app/pages/home_page.dart';
@@ -84,7 +84,7 @@ final GoRouter router = GoRouter(
             body: Center(child: Text('Anime ID not found')),
           );
         }
-        return EpisodePage(animeId: animeId);
+        return StreamPage(animeId: animeId);
       },
     ),
   ],

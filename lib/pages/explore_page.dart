@@ -103,56 +103,51 @@ class _ExplorePageState extends State<ExplorePage> {
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(10, 20, 20, 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Judul section (boleh di‐extract jadi widget terpisah jika banyak section)
-                const Text(
-                  'Explore Anime',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16),
-
-                // Grid fleksibel: Wrap yang membagi spasi di antar item
-                Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
-                  children:
-                      _animeList.map((anime) {
-                        return AnimeCard(
-                          animeId: anime.animeId,
-                          imagePath: anime.poster,
-                          title: anime.title,
-                          episodes: anime.episodes.toString(),
-                        );
-                      }).toList(),
-                ),
-
-                // Spacer sebelum loading indicator
-                const SizedBox(height: 20),
-
-                // Jika masih ada halaman berikutnya, tampilkan loading spinner saat fetch lebih lanjut
-                if (_isLoadingMore)
-                  const Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      child: CircularProgressIndicator(),
-                    ),
+            padding: const EdgeInsets.all(20),
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Grid fleksibel: Wrap yang membagi spasi di antar item
+                  Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    children:
+                        _animeList.map((anime) {
+                          return AnimeCard(
+                            animeId: anime.animeId,
+                            imagePath: anime.poster,
+                            title: anime.title,
+                            episodes: anime.episodes.toString(),
+                          );
+                        }).toList(),
                   ),
 
-                // Kalau tidak ada lagi halaman berikutnya dan list kosong, tampilkan pesan
-                if (!_isLoadingMore && _animeList.isEmpty)
-                  const Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 40),
-                      child: Text(
-                        'Belum ada anime untuk ditampilkan.',
-                        style: TextStyle(fontSize: 16),
+                  // Spacer sebelum loading indicator
+                  const SizedBox(height: 20),
+
+                  // Jika masih ada halaman berikutnya, tampilkan loading spinner saat fetch lebih lanjut
+                  if (_isLoadingMore)
+                    const Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        child: CircularProgressIndicator(),
                       ),
                     ),
-                  ),
-              ],
+
+                  // Kalau tidak ada lagi halaman berikutnya dan list kosong, tampilkan pesan
+                  if (!_isLoadingMore && _animeList.isEmpty)
+                    const Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 40),
+                        child: Text(
+                          'Terjadi masalah dengan server',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
         ),

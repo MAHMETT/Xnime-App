@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xnime_app/core/theme/app_colors.dart';
 import 'package:xnime_app/core/theme/app_text_styles.dart';
 import 'package:xnime_app/data/models/anime_items_model.dart';
@@ -71,10 +70,7 @@ class _CompletedPageState extends State<CompletedPage> {
       appBar: AppBar(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SvgPicture.asset('assets/logos/Xyutori.svg', width: 30),
-            Text('Xnime', style: AppTextStyles.xlBold),
-          ],
+          children: [Text('Completed', style: AppTextStyles.xlBold)],
         ),
       ),
       body: RefreshIndicator(
