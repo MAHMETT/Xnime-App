@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:xnime_app/core/theme/app_colors.dart';
@@ -27,11 +28,16 @@ class _StreamPageState extends State<StreamPage> {
   void initState() {
     super.initState();
     _futureDetail = _fetchWithRetry();
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: [], // kosong = fullscreen
+    );
   }
 
   @override
   void dispose() {
     _retryTimer?.cancel();
+    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.dispose();
   }
 

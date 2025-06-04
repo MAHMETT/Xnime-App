@@ -36,7 +36,7 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: ApiEndpoints.onBoarding,
       builder: (BuildContext context, GoRouterState state) {
-        return const OnBoardingScreen();
+        return const OnboardingScreen();
       },
     ),
     GoRoute(

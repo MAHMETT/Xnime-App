@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 // import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:xnime_app/core/theme/app_colors.dart';
@@ -35,11 +36,20 @@ class _DetailPageState extends State<DetailPage> {
   void initState() {
     super.initState();
     _fetchDetailOnce();
+
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: [], // kosong = fullscreen
+    );
   }
 
   @override
   void dispose() {
     _retryTimer?.cancel();
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: [SystemUiOverlay.top],
+    );
     super.dispose();
   }
 
