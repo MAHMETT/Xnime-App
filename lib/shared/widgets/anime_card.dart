@@ -1,3 +1,4 @@
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:xnime_app/core/theme/app_colors.dart';
@@ -38,7 +39,11 @@ class AnimeCard extends StatelessWidget {
                   aspectRatio: 3 / 4.5,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.network(imagePath, fit: BoxFit.cover),
+                    child: FancyShimmerImage(
+                      imageUrl: imagePath,
+                      boxFit: BoxFit.cover,
+                      errorWidget: Image.asset('assets/images/noImage.png'),
+                    ),
                   ),
                 ),
                 if (episodes != null && episodes!.isNotEmpty)
